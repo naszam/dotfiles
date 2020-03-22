@@ -50,8 +50,22 @@ PROMPT_GIT="$(custom_git_prompt_info)"
 
 PROMPT_EXIT_CODE="%B%(?.%F{$COLOR_GREEN}*.%F{$COLOR_RED}*)%f%b"
 
+# we want to print certain things on the right, on the same line,
+# and RPROMPT will always print on the same line as the cursor
+PROMPT_LEFT="%B$PROMPT_SYM $PROMPT_PWD %f$PROMPT_GIT"
+
+# placeholder; for now we're only printing a single character
+# PROMPT_RIGHT=...
+
+# for some reason, COLUMNS is 5 short of reality
+PROMPT_PAD_SIZE=$(( $COLUMNS + 5 - ${#PROMPT_LEFT} - 1 ))
+
+if (( PROMPT_PAD_SIZE > 0 )); then
+  PROMPT_LEFT=${(r:(( $PROMPT_PAD_SIZE + ${#PROMPT_LEFT} )):)PROMPT_LEFT}
+fi
+
 # PROMPT
-PROMPT='%B$PROMPT_SYM $PROMPT_PWD %f$PROMPT_GIT $PROMPT_EXIT_CODE%b
+PROMPT='$PROMPT_LEFT $PROMPT_EXIT_CODE%b
 %F{$COLOR_LIGHT_GRAY}'
 
 RPROMPT=""
